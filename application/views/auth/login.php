@@ -17,6 +17,8 @@
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>themes/adminlte/dist/css/AdminLTE.min.css">
         <!-- iCheck -->
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>themes/adminlte/plugins/iCheck/square/blue.css">
+        <!-- toastjs -->
+        <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>themes/adminlte/plugins/toastjs/toastr.min.css">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -37,7 +39,7 @@
             <div class="login-box-body">
                 <p class="login-box-msg"><?php echo lang('login_subheading'); ?></p>
                 
-                <div class="form-group has-error">
+                <div class="form-group">
                     <label><?php echo $message; ?></label>
                 </div>
                 
@@ -68,9 +70,9 @@
 
                 <div class="social-auth-links text-center">
                     <p>- OR -</p>
-                    <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using
+                    <a href="#" class="social_login btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using
                         Facebook</a>
-                    <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign in using
+                    <a href="#" class="social_login btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> Sign in using
                         Google+</a>
                 </div>
                 <!-- /.social-auth-links -->
@@ -88,12 +90,18 @@
         <script src="<?php echo base_url(); ?>themes/adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- iCheck -->
         <script src="<?php echo base_url(); ?>themes/adminlte/plugins/iCheck/icheck.min.js"></script>
+        <script src="<?php echo base_url(); ?>themes/adminlte/plugins/toastjs/toastr.min.js"></script>
         <script>
             $(function () {
                 $('input').iCheck({
                     checkboxClass: 'icheckbox_square-blue',
                     radioClass: 'iradio_square-blue',
                     increaseArea: '20%' /* optional */
+                });
+                
+                $('.social_login').on('click', function() {
+                    toastr.info('Sorry, this function has not been implemented yet!')
+
                 });
             });
         </script>

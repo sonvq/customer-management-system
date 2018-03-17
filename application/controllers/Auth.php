@@ -18,6 +18,7 @@ class Auth extends CI_Controller
 		$this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
 
 		$this->lang->load('auth');
+        $this->lang->load('common');
 	}
 
 	/**
@@ -41,6 +42,12 @@ class Auth extends CI_Controller
 			// set the flash data error message if there is one
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
+            redirect('customer/index', 'refresh');
+		}
+	}
+    
+    public function user_list() {
+            $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 			//list the users
 			$this->data['users'] = $this->ion_auth->users()->result();
 			foreach ($this->data['users'] as $k => $user)
@@ -49,8 +56,7 @@ class Auth extends CI_Controller
 			}
 
 			$this->_render_page('auth/index', $this->data);
-		}
-	}
+    }
 
 	/**
 	 * Log the user in
@@ -220,12 +226,8 @@ class Auth extends CI_Controller
 		if ($this->form_validation->run() === FALSE)
 		{
 			$this->data['type'] = $this->config->item('identity', 'ion_auth');
-			// setup the input
-			$this->data['identity'] = array('name' => 'identity',
-				'id' => 'identity',
-			);
-
-			if ($this->config->item('identity', 'ion_auth') != 'email')
+            
+            if ($this->config->item('identity', 'ion_auth') != 'email')
 			{
 				$this->data['identity_label'] = $this->lang->line('forgot_password_identity_label');
 			}
@@ -233,6 +235,22 @@ class Auth extends CI_Controller
 			{
 				$this->data['identity_label'] = $this->lang->line('forgot_password_email_identity_label');
 			}
+            
+			// setup the input
+			$this->data['identity'] = array(
+                'name' => 'identity',
+				'id' => 'identity',
+                'class' => 'form-control',
+                'required' => true,
+                'type' => 'email',
+                'placeholder' => $this->data['identity_label']
+			);
+            
+            $this->data['submit'] = array('name' => 'submit',
+				'id' => 'submit',
+				'type' => 'submit',
+                'class' => 'btn btn-primary btn-block btn-flat',
+			);			
 
 			// set any errors and display the form
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');

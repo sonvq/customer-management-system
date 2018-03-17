@@ -21,9 +21,6 @@
 $lang['error_csrf'] = 'This form post did not pass our security checks.';
 
 // Login
-$lang['site_title']            = 'ClevverMail';
-$lang['site_title_short']      = 'Customer Management';
-$lang['site_title_full']       = 'Customer Management System';
 $lang['login_heading']         = 'Login';
 $lang['login_subheading']      = 'Sign in to start your session';
 $lang['login_identity_label']  = 'Email';
@@ -96,6 +93,7 @@ $lang['edit_user_validation_company_label']          = 'Company Name';
 $lang['edit_user_validation_groups_label']           = 'Groups';
 $lang['edit_user_validation_password_label']         = 'Password';
 $lang['edit_user_validation_password_confirm_label'] = 'Password Confirmation';
+$lang['remembered_your_password']                    = 'Remembered your password? Login';
 
 // Create Group
 $lang['create_group_title']                  = 'Create Group';
@@ -129,15 +127,15 @@ $lang['change_password_validation_new_password_label']         = 'New Password';
 $lang['change_password_validation_new_password_confirm_label'] = 'Confirm New Password';
 
 // Forgot Password
-$lang['forgot_password_heading']                 = 'Forgot Password';
-$lang['forgot_password_subheading']              = 'Please enter your %s so we can send you an email to reset your password.';
-$lang['forgot_password_email_label']             = '%s:';
-$lang['forgot_password_submit_btn']              = 'Submit';
-$lang['forgot_password_validation_email_label']  = 'Email Address';
-$lang['forgot_password_identity_label'] = 'Identity';
-$lang['forgot_password_email_identity_label']    = 'Email';
-$lang['forgot_password_email_not_found']         = 'No record of that email address.';
-$lang['forgot_password_identity_not_found']         = 'No record of that username.';
+$lang['forgot_password_heading']                        = 'Forgot Password';
+$lang['forgot_password_subheading']                     = 'Please enter your %s so we can send you an email to reset your password.';
+$lang['forgot_password_email_label']                    = '%s:';
+$lang['forgot_password_submit_btn']                     = 'Submit';
+$lang['forgot_password_validation_email_label']         = 'Email Address';
+$lang['forgot_password_identity_label']                 = 'Identity';
+$lang['forgot_password_email_identity_label']           = 'Email';
+$lang['forgot_password_email_not_found']                = 'Provided email does not exist';
+$lang['forgot_password_identity_not_found']             = 'No record of that username.';
 
 // Reset Password
 $lang['reset_password_heading']                               = 'Change Password';
