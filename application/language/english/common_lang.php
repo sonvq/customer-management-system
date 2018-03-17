@@ -27,5 +27,7 @@ $lang['log_out']                    = 'Log out';
 $lang['cancel_button']              = 'Cancel';
 $lang['submit_button']              = 'Submit';
 $lang['delete_button']              = 'Delete';
+$lang['bad_request']                = 'Bad request, resource not found or has been deleted';
+
 
 

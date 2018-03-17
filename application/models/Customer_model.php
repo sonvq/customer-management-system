@@ -25,6 +25,10 @@ class Customer_model extends CI_Model {
             $this->db->order_by('id', 'DESC');
         }
     }
+    
+    function delete_customer($customer_id){
+        return $this->db->delete($this->table, array('id' => $customer_id));
+    }
 
     function make_datatables() {
         $this->make_query();

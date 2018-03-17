@@ -19,6 +19,8 @@
         <!-- AdminLTE Skins. Choose a skin from the css/skins
              folder instead of downloading all of them to reduce the load. -->
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>themes/adminlte/dist/css/skins/_all-skins.min.css">
+        
+        <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>themes/adminlte/plugins/toastjs/toastr.min.css">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -658,7 +660,7 @@
                         <button type="button" class="btn btn-outline btn-flat" data-dismiss="modal">
                             <?php echo lang('cancel_button'); ?>
                         </button>
-                        <button type="submit" class="btn btn-outline btn-flat"><i class="fa fa-trash"></i> 
+                        <button data-dismiss="modal" type="button" class="submit-delete-item btn btn-outline btn-flat"><i class="fa fa-trash"></i> 
                             <?php echo lang('delete_button'); ?>
                         </button>
                     </div>
@@ -682,6 +684,7 @@
         <!-- AdminLTE for demo purposes -->
         <script src="<?php echo base_url(); ?>themes/adminlte/dist/js/demo.js"></script>
 
+        <script src="<?php echo base_url(); ?>themes/adminlte/plugins/toastjs/toastr.min.js"></script>
         <!-- page script -->
         <script>
             $(function () {
@@ -695,7 +698,7 @@
                      },  
                      "columnDefs":[  
                           {  
-                               "targets":[3],  
+                               "targets":[4],  
                                "orderable":false,  
                           },  
                      ],  
@@ -705,23 +708,34 @@
                     var button = $(event.relatedTarget);
                     var actionTarget = button.data('action-target');
                     var modal = $(this);
-                    modal.find('form').attr('action', actionTarget);
-
-                    if (button.data('message') === undefined) {
-                    } else if (button.data('message') != '') {
-                        modal.find('.custom-message').show().empty().append(button.data('message'));
-                        modal.find('.default-message').hide();
-                    } else {
-                        modal.find('.default-message').show();
-                        modal.find('.custom-message').hide();
-                    }
-
-                    if (button.data('remove-submit-button') === true) {
-                        modal.find('button[type=submit]').hide();
-                    } else {
-                        modal.find('button[type=submit]').show();
-                    }
+                    console.log(actionTarget);
+                    modal.find('.submit-delete-item').data('action-target', actionTarget);                  
                 });
+
+                $('body .submit-delete-item').on('click', function(){
+                    var actionTarget = $(this).data('action-target');
+                    $.ajax({
+                        url: actionTarget,
+                        type: 'delete',
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            console.log(data.status);
+                            if (data.status === "success") {
+                                toastr.success(data.message);
+                                setTimeout(function() {
+                                    dataTable.ajax.reload();
+                                });
+                            } else {
+                                toastr.error(data.message);
+                            }
+                        },
+                        error: function () {
+                            toastr.error('Internal server error, please try again later');
+                        }
+                    });
+                });
+            
             })
         </script>
     </body>

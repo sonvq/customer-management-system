@@ -44,6 +44,22 @@ class Customer extends CI_Controller
 		}
 	}
     
+    public function customer_destroy($customer_id = null) {
+        $this->load->model("Customer_model"); 
+        if (!empty($customer_id)) {
+            $this->Customer_model->delete_customer($customer_id);                  
+            echo json_encode([
+                "status" => "success",
+                "message" => lang('customer_delete_success')
+            ]);
+        } else {
+            echo json_encode([
+                "status" => "error",
+                "message" => lang('bad_request')
+            ]);
+        }
+    }
+    
     public function customer_ajax() {
         $this->load->model("Customer_model");  
         $fetch_data = $this->Customer_model->make_datatables();
@@ -55,8 +71,8 @@ class Customer extends CI_Controller
             $sub_array[] = $row->email;
             $sub_array[] = date("d F Y H:i", $row->created_on);
             $sub_array[] = '<div class="btn-group">
-                                <a href="customer/customer_edit?id='. $row->id . '" class="btn btn-default btn-flat"><i class="fa fa-pencil"></i></a>
-                                <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="http://car.local/en/backend/media/media/19"><i class="fa fa-trash"></i></button>
+                                <a href="customer/customer_edit/'. $row->id . '" class="btn btn-default btn-flat"><i class="fa fa-pencil"></i></a>
+                                <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="'. base_url() . 'customer/customer_destroy/' . $row->id . '"><i class="fa fa-trash"></i></button>
                             </div>';
             $data[] = $sub_array;
         }
