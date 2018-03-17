@@ -19,6 +19,7 @@
         <!-- AdminLTE Skins. Choose a skin from the css/skins
              folder instead of downloading all of them to reduce the load. -->
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>themes/adminlte/dist/css/skins/_all-skins.min.css">
+        <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>themes/adminlte/dist/css/site.css">
         
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>themes/adminlte/plugins/toastjs/toastr.min.css">
 
@@ -34,7 +35,8 @@
               href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     </head>
     <?php $loggedUser = $this->ion_auth->user()->row(); ?>    
-    <body class="hold-transition skin-blue sidebar-mini">
+    <div id="loading-indicator" style="display: none"></div>
+    <body class="hold-transition skin-blue sidebar-mini">        
         <div class="wrapper">
             <header class="main-header">
                 <!-- Logo -->
@@ -710,6 +712,15 @@
                     var modal = $(this);
                     console.log(actionTarget);
                     modal.find('.submit-delete-item').data('action-target', actionTarget);                  
+                });
+                
+                
+                $(document).ajaxSend(function(event, request, settings) {
+                    $('#loading-indicator').show();
+                });
+
+                $(document).ajaxComplete(function(event, request, settings) {
+                    $('#loading-indicator').hide();
                 });
 
                 $('body .submit-delete-item').on('click', function(){
