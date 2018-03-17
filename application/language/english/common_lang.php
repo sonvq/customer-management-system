@@ -23,5 +23,9 @@ $lang['new_user']                   = 'New User';
 $lang['customer_management']        = 'Customer Management';
 $lang['customer_list']              = 'Customer List';
 $lang['new_customer']               = 'New Customer';
+$lang['log_out']                    = 'Log out';
+$lang['cancel_button']              = 'Cancel';
+$lang['submit_button']              = 'Submit';
+$lang['delete_button']              = 'Delete';
 
 

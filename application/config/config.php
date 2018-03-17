@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+date_default_timezone_set('Asia/Ho_Chi_Minh');
+
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -35,7 +37,7 @@ $config['base_url'] = 'http://customer.local/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------

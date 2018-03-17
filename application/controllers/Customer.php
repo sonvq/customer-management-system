@@ -38,18 +38,36 @@ class Customer extends CI_Controller
 		else
 		{
 			// set the flash data error message if there is one
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-
-			//list the users
-			$this->data['users'] = $this->ion_auth->users()->result();
-			foreach ($this->data['users'] as $k => $user)
-			{
-				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
-			}
+			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');			
 
 			$this->_render_page('customer/index', $this->data);
 		}
 	}
+    
+    public function customer_ajax() {
+        $this->load->model("Customer_model");  
+        $fetch_data = $this->Customer_model->make_datatables();
+        $data = array();
+        foreach ($fetch_data as $row) {
+            $sub_array = array();
+            $sub_array[] = $row->id;
+            $sub_array[] = $row->fullname;
+            $sub_array[] = $row->email;
+            $sub_array[] = date("d F Y H:i", $row->created_on);
+            $sub_array[] = '<div class="btn-group">
+                                <a href="customer/customer_edit?id='. $row->id . '" class="btn btn-default btn-flat"><i class="fa fa-pencil"></i></a>
+                                <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="http://car.local/en/backend/media/media/19"><i class="fa fa-trash"></i></button>
+                            </div>';
+            $data[] = $sub_array;
+        }
+        $output = array(
+            "draw" => intval($_POST["draw"]),
+            "recordsTotal" => $this->Customer_model->get_all_data(),
+            "recordsFiltered" => $this->Customer_model->get_filtered_data(),
+            "data" => $data
+        );
+        echo json_encode($output);
+    }
 
 	/**
 	 * @return array A CSRF key-value pair
