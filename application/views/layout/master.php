@@ -274,7 +274,7 @@
                                         <p>
                                             <?php if (!empty($loggedUser)) : ?>
                                                 <?php echo $loggedUser->first_name . ' ' . $loggedUser->last_name . ' - ' . $loggedUser->company; ?>                                                
-                                                <small>Member since <?php echo date("D dS Y", $loggedUser->created_on); ?></small>
+                                                <small>Member since <?php echo date("D, F dS Y", $loggedUser->created_on); ?></small>
                                             <?php endif; ?> 
                                         </p>
                                     </li>
