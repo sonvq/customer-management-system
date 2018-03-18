@@ -7,3 +7,7 @@
     background: url("../img/ajax.gif") center center no-repeat rgba(0,0,0,0.8);
     z-index: 999999;
 }
+.padding-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

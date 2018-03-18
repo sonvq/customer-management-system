@@ -47,15 +47,19 @@ class Auth extends CI_Controller
 	}
     
     public function user_list() {
-            $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-			//list the users
-			$this->data['users'] = $this->ion_auth->users()->result();
-			foreach ($this->data['users'] as $k => $user)
-			{
-				$this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
-			}
+        $this->data = [
+            'page_heading' => lang('index_heading'),
+            'content' => 'auth/index'
+        ];
+        $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
+        //list the users
+        $this->data['users'] = $this->ion_auth->users()->result();
+        foreach ($this->data['users'] as $k => $user)
+        {
+            $this->data['users'][$k]->groups = $this->ion_auth->get_users_groups($user->id)->result();
+        }          
 
-			$this->_render_page('auth/index', $this->data);
+        $this->_render_page('layout/master', $this->data);            			
     }
 
 	/**

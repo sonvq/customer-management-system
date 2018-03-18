@@ -20,6 +20,16 @@ $lang['customer_listing_description']               = 'Following is the list of 
 $lang['delete_customer_title']                      = 'Delete Customer';
 $lang['delete_customer_message']                    = 'Are you sure you want to delete this customer?';
 $lang['customer_delete_success']                    = 'Successfully deleted customer';
+$lang['customer_create_heading']                    = 'Create new customer';
+$lang['customer_create_subtitle']                   = 'Fill in the form below to create a new customer';
+$lang['customer_email_label']                       = 'Email';
+$lang['customer_fullname_label']                    = 'Fullname';
+$lang['customer_submit_button']                     = 'Create new user';
+
+
+
+
+
 
 
 

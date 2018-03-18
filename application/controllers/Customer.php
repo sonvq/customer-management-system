@@ -37,12 +37,161 @@ class Customer extends CI_Controller
 		}
 		else
 		{
-			// set the flash data error message if there is one
-			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');			
-
-			$this->_render_page('customer/index', $this->data);
+            $this->data = [
+                'content' => 'customer/index',
+                'javascript' => 'partials/customer/index_javascript',
+                'extra_footer' => 'partials/customer/index_extra_footer',
+                'page_heading' => lang('customer_index_heading')
+            ];
+			$this->_render_page('layout/master', $this->data);
 		}
 	}
+    
+    public function customer_create()
+	{
+        $this->data = [
+            'content' => 'customer/customer_create',
+            'page_heading' => lang('customer_create_heading'),
+            'javascript' => 'partials/customer/customer_create_javascript'
+        ];
+      
+		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
+		{
+			redirect('auth', 'refresh');
+		}		        
+
+       $this->data['email'] = array(
+            'name' => 'email',
+            'id' => 'email',
+            'type' => 'email',
+            'class' => 'form-control',
+            'placeholder' => lang('customer_email_label'),
+            'required' => true
+        );
+       
+        $this->data['fullname'] = array(
+            'name' => 'fullname',
+            'id' => 'fullname',
+            'class' => 'form-control',
+            'placeholder' => lang('customer_fullname_label'),
+            'type' => 'text',
+            'required' => true
+        );
+          
+        $this->data['submit'] = array('name' => 'submit',
+            'id' => 'submit',
+            'type' => 'submit',
+            'class' => 'btn btn-primary btn-flat pull-left submit-create-customer',
+        );
+                    
+        $this->_render_page('layout/master', $this->data);
+	}
+    
+    /**
+	 * Edit a customer
+	 *
+	 * @param int|string $id
+	 */
+	public function customer_edit($id)
+	{
+		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
+		{
+			redirect('auth', 'refresh');
+		}
+        $this->load->model("Customer_model");
+        
+		$customer = $this->Customer_model->user($id)->row();
+		$groups = $this->ion_auth->groups()->result_array();
+		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
+
+		// validate form input
+		$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'trim|required');
+		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'trim|required');
+		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'trim|required');
+		$this->form_validation->set_rules('company', $this->lang->line('edit_user_validation_company_label'), 'trim|required');
+
+		if (isset($_POST) && !empty($_POST))
+		{
+			// do we have a valid request?
+			if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id'))
+			{
+				show_error($this->lang->line('error_csrf'));
+			}
+
+			// update the password if it was posted
+			if ($this->input->post('password'))
+			{
+				$this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
+				$this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
+			}
+
+			if ($this->form_validation->run() === TRUE)
+			{
+				$data = array(
+					'first_name' => $this->input->post('first_name'),
+					'last_name' => $this->input->post('last_name'),
+					'company' => $this->input->post('company'),
+					'phone' => $this->input->post('phone'),
+				);
+
+				// update the password if it was posted
+				if ($this->input->post('password'))
+				{
+					$data['password'] = $this->input->post('password');
+				}
+
+				// Only allow updating groups if user is admin
+				if ($this->ion_auth->is_admin())
+				{
+					// Update the groups user belongs to
+					$groupData = $this->input->post('groups');
+
+					if (isset($groupData) && !empty($groupData))
+					{
+
+						$this->ion_auth->remove_from_group('', $id);
+
+						foreach ($groupData as $grp)
+						{
+							$this->ion_auth->add_to_group($grp, $id);
+						}
+
+					}
+				}
+
+				// check to see if we are updating the user
+				if ($this->ion_auth->update($user->id, $data))
+				{
+					// redirect them back to the admin page if admin, or to the base url if non admin
+					$this->session->set_flashdata('message', $this->ion_auth->messages());
+					if ($this->ion_auth->is_admin())
+					{
+						redirect('auth', 'refresh');
+					}
+					else
+					{
+						redirect('/', 'refresh');
+					}
+
+				}
+				else
+				{
+					// redirect them back to the admin page if admin, or to the base url if non admin
+					$this->session->set_flashdata('message', $this->ion_auth->errors());
+					if ($this->ion_auth->is_admin())
+					{
+						redirect('auth', 'refresh');
+					}
+					else
+					{
+						redirect('/', 'refresh');
+					}
+
+				}
+
+			}
+		}
+    }
     
     public function customer_destroy($customer_id = null) {
         $this->load->model("Customer_model"); 
