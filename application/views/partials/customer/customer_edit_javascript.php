@@ -10,7 +10,7 @@
         {            
             var email_input = $('#email').val();
             var fullname_input = $('#fullname').val();
-            
+            var customer_id = $('#customer-id').val();
             if(email_input == '' || fullname_input == '') {
                 toastr.error('<?php echo lang('customer_create_email_fullname_required'); ?>');
                 return false;
@@ -20,7 +20,7 @@
                 return false;
             }
             $.ajax({
-                url: "<?php echo base_url(); ?>" + 'customer/customer_create_ajax',
+                url: "<?php echo base_url(); ?>" + 'customer/customer_edit_ajax/' + customer_id,
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -32,9 +32,6 @@
                     console.log(data.status);
                     if (data.status === "success") {
                         toastr.success(data.message);
-                        // Reset customer form
-                        $('#email').val('');
-                        $('#fullname').val('');
                         // Redirect back to listing screen
                         setTimeout(function(){
                             window.location.href = "<?php echo base_url(); ?>" + "customer/index";  
@@ -49,7 +46,7 @@
             });
         }
         
-        $("#customer-create-form")[0].addEventListener('submit', function (e) {
+        $("#customer-edit-form")[0].addEventListener('submit', function (e) {
             e.preventDefault();
             formValidate();
         }, false);

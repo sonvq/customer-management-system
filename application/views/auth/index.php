@@ -18,7 +18,12 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="padding-10 box-title"><?php echo lang('index_subheading'); ?></h3>
-                    <a href="../customer/customer_create" class="btn btn-primary btn-flat padding-10 pull-right"><i class="fa fa-user-plus"></i> <?php echo lang('new_customer'); ?></a>
+                    <a href="<?php echo base_url(); ?>auth/create_user" class="btn btn-primary btn-flat padding-10 pull-right"><i class="fa fa-user-plus"></i> 
+                        <?php echo lang('index_create_user_link'); ?>
+                    </a>
+                    <a href="<?php echo base_url(); ?>auth/create_group" class="btn btn-primary btn-flat padding-10 margin-right-10 pull-right"><i class="fa fa-user-plus"></i> 
+                        <?php echo lang('index_create_group_link'); ?>
+                    </a>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -46,8 +51,6 @@
                             </tr>
                         <?php endforeach;?>
                     </table>
-
-                    <p><?php echo anchor('auth/create_user', lang('index_create_user_link'))?> | <?php echo anchor('auth/create_group', lang('index_create_group_link'))?></p>
                 </div>
                 <!-- /.box-body -->
             </div>

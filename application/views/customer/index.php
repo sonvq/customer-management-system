@@ -18,7 +18,7 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="padding-10 box-title"><?php echo lang('customer_listing_description'); ?></h3>
-                    <a href="../customer/customer_create" class="btn btn-primary btn-flat padding-10 pull-right"><i class="fa fa-user-plus"></i> <?php echo lang('new_customer'); ?></a>
+                    <a href="<?php echo base_url(); ?>customer/customer_create" class="btn btn-primary btn-flat padding-10 pull-right"><i class="fa fa-user-plus"></i> <?php echo lang('new_customer'); ?></a>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">

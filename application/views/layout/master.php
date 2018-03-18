@@ -299,7 +299,7 @@
                                             <a href="#" class="btn btn-default btn-flat">Profile</a>
                                         </div>
                                         <div class="pull-right">
-                                            <a href="../auth/logout" class="btn btn-default btn-flat">
+                                            <a href="<?php echo base_url(); ?>auth/logout" class="btn btn-default btn-flat">
                                                 <?php echo lang('log_out'); ?>
                                             </a>
                                         </div>
@@ -353,10 +353,10 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li class="<?php if ($this->uri->segment(1) == 'auth' && $this->uri->segment(2) == 'user_list') { echo ' active '; } ?>">
-                                    <a href="../auth/user_list"><i class="fa fa fa-table"></i> <?php echo lang('user_list'); ?></a>
+                                    <a href="<?php echo base_url(); ?>auth/user_list"><i class="fa fa fa-table"></i> <?php echo lang('user_list'); ?></a>
                                 </li>
                                 <li class="<?php if ($this->uri->segment(1) == 'auth' && $this->uri->segment(2) == 'create_user') { echo ' active '; } ?>">
-                                    <a href="../auth/create_user"><i class="fa fa-user-plus"></i> <?php echo lang('new_user'); ?></a>
+                                    <a href="<?php echo base_url(); ?>auth/create_user"><i class="fa fa-user-plus"></i> <?php echo lang('new_user'); ?></a>
                                 </li>
                             </ul>
                         </li>
@@ -369,12 +369,12 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li class="<?php if ($this->uri->segment(1) == 'customer' && $this->uri->segment(2) == 'index') { echo ' active '; } ?>">
-                                    <a href="../customer/index"><i class="fa fa fa-table"></i> 
+                                    <a href="<?php echo base_url(); ?>customer/index"><i class="fa fa fa-table"></i> 
                                         <?php echo lang('customer_list'); ?>
                                     </a>
                                 </li>
                                 <li class="<?php if ($this->uri->segment(1) == 'customer' && $this->uri->segment(2) == 'customer_create') { echo ' active '; } ?>">
-                                    <a href="../customer/customer_create"><i class="fa fa-user-plus"></i> 
+                                    <a href="<?php echo base_url(); ?>customer/customer_create"><i class="fa fa-user-plus"></i> 
                                         <?php echo lang('new_customer'); ?>
                                     </a>
                                 </li>

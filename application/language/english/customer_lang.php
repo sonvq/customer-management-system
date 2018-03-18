@@ -21,10 +21,23 @@ $lang['delete_customer_title']                      = 'Delete Customer';
 $lang['delete_customer_message']                    = 'Are you sure you want to delete this customer?';
 $lang['customer_delete_success']                    = 'Successfully deleted customer';
 $lang['customer_create_heading']                    = 'Create new customer';
+$lang['customer_edit_heading']                      = 'Edit existing customer';
 $lang['customer_create_subtitle']                   = 'Fill in the form below to create a new customer';
+$lang['customer_edit_subtitle']                     = 'Fill in the form below to update existing customer information';
 $lang['customer_email_label']                       = 'Email';
 $lang['customer_fullname_label']                    = 'Fullname';
-$lang['customer_submit_button']                     = 'Create new user';
+$lang['customer_submit_create_button']              = 'Create new customer';
+$lang['customer_submit_edit_button']                = 'Update customer';
+$lang['customer_create_email_fullname_required']    = 'Email and fullname are required!';
+$lang['customer_create_email_invalid_format']       = 'Invalid email format';
+$lang['customer_create_success']                    = 'Successfully created new customer, the page will now automatically redirect to customer listing';
+$lang['customer_existed']                           = 'The email already existed in the system, please input a different one';
+$lang['customer_update_success']                    = 'Successfully updated customer information, the page will now automatically redirect to customer listing';
+
+
+
+
+
 
 
 

@@ -28,6 +28,7 @@ $lang['cancel_button']              = 'Cancel';
 $lang['submit_button']              = 'Submit';
 $lang['delete_button']              = 'Delete';
 $lang['bad_request']                = 'Bad request, resource not found or has been deleted';
+$lang['internal_server_error']      = 'Internal server error, please try again later';
 
 
 

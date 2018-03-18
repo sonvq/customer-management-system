@@ -47,20 +47,55 @@ class Customer extends CI_Controller
 		}
 	}
     
+    public function customer_create_ajax() {
+        $this->load->model("Customer_model"); 
+        
+        $email = $this->input->post('email');
+        $fullname = $this->input->post('fullname');
+        
+        if (empty($email) ||empty($fullname)) {
+            echo json_encode([
+                "status" => "error",
+                "message" => lang('customer_create_email_fullname_required')
+            ]);
+        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode([
+                "status" => "error",
+                "message" => lang('customer_create_email_invalid_format')
+            ]);
+        } else {
+            // Check if there is already customer email created
+            $count = $this->Customer_model->count_existing_customer($email); 
+            if ($count > 0) {
+                echo json_encode([
+                    "status" => "error",
+                    "message" => lang('customer_existed')
+                ]);
+            } else {
+                // Success validation, start create new customer record
+                $this->Customer_model->customer_create($email, $fullname); 
+                echo json_encode([
+                    "status" => "success",
+                    "message" => lang('customer_create_success')
+                ]);
+            }
+        }
+    }
+    
     public function customer_create()
-	{
+	{        
+		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
+		{
+			redirect('auth', 'refresh');
+		}	
+        
         $this->data = [
             'content' => 'customer/customer_create',
             'page_heading' => lang('customer_create_heading'),
             'javascript' => 'partials/customer/customer_create_javascript'
         ];
-      
-		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
-		{
-			redirect('auth', 'refresh');
-		}		        
-
-       $this->data['email'] = array(
+      	        
+        $this->data['email'] = array(
             'name' => 'email',
             'id' => 'email',
             'type' => 'email',
@@ -87,6 +122,41 @@ class Customer extends CI_Controller
         $this->_render_page('layout/master', $this->data);
 	}
     
+    public function customer_edit_ajax($id) {
+        $this->load->model("Customer_model"); 
+        
+        $email = $this->input->post('email');
+        $fullname = $this->input->post('fullname');
+        
+        if (empty($email) ||empty($fullname)) {
+            echo json_encode([
+                "status" => "error",
+                "message" => lang('customer_create_email_fullname_required')
+            ]);
+        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode([
+                "status" => "error",
+                "message" => lang('customer_create_email_invalid_format')
+            ]);
+        } else {
+            // Check if there is already customer email created
+            $count = $this->Customer_model->count_existing_customer_except($id, $email); 
+            if ($count > 0) {
+                echo json_encode([
+                    "status" => "error",
+                    "message" => lang('customer_existed')
+                ]);
+            } else {
+                // Success validation, start create new customer record
+                $this->Customer_model->customer_edit($id, $email, $fullname); 
+                echo json_encode([
+                    "status" => "success",
+                    "message" => lang('customer_update_success')
+                ]);
+            }
+        }
+    }
+    
     /**
 	 * Edit a customer
 	 *
@@ -94,103 +164,51 @@ class Customer extends CI_Controller
 	 */
 	public function customer_edit($id)
 	{
-		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
+        $this->load->model("Customer_model"); 
+        if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin())
 		{
 			redirect('auth', 'refresh');
 		}
-        $this->load->model("Customer_model");
         
-		$customer = $this->Customer_model->user($id)->row();
-		$groups = $this->ion_auth->groups()->result_array();
-		$currentGroups = $this->ion_auth->get_users_groups($id)->result();
+        $existingCustomer = $this->Customer_model->find_existing_customer($id);        
+        if (empty($existingCustomer)) {
+            redirect('auth', 'refresh');
+        }
+        
+		$this->data = [
+            'content' => 'customer/customer_edit',
+            'page_heading' => lang('customer_edit_heading'),
+            'javascript' => 'partials/customer/customer_edit_javascript',
+            'id' => $id
+        ];      				        
 
-		// validate form input
-		$this->form_validation->set_rules('first_name', $this->lang->line('edit_user_validation_fname_label'), 'trim|required');
-		$this->form_validation->set_rules('last_name', $this->lang->line('edit_user_validation_lname_label'), 'trim|required');
-		$this->form_validation->set_rules('phone', $this->lang->line('edit_user_validation_phone_label'), 'trim|required');
-		$this->form_validation->set_rules('company', $this->lang->line('edit_user_validation_company_label'), 'trim|required');
-
-		if (isset($_POST) && !empty($_POST))
-		{
-			// do we have a valid request?
-			if ($this->_valid_csrf_nonce() === FALSE || $id != $this->input->post('id'))
-			{
-				show_error($this->lang->line('error_csrf'));
-			}
-
-			// update the password if it was posted
-			if ($this->input->post('password'))
-			{
-				$this->form_validation->set_rules('password', $this->lang->line('edit_user_validation_password_label'), 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]');
-				$this->form_validation->set_rules('password_confirm', $this->lang->line('edit_user_validation_password_confirm_label'), 'required');
-			}
-
-			if ($this->form_validation->run() === TRUE)
-			{
-				$data = array(
-					'first_name' => $this->input->post('first_name'),
-					'last_name' => $this->input->post('last_name'),
-					'company' => $this->input->post('company'),
-					'phone' => $this->input->post('phone'),
-				);
-
-				// update the password if it was posted
-				if ($this->input->post('password'))
-				{
-					$data['password'] = $this->input->post('password');
-				}
-
-				// Only allow updating groups if user is admin
-				if ($this->ion_auth->is_admin())
-				{
-					// Update the groups user belongs to
-					$groupData = $this->input->post('groups');
-
-					if (isset($groupData) && !empty($groupData))
-					{
-
-						$this->ion_auth->remove_from_group('', $id);
-
-						foreach ($groupData as $grp)
-						{
-							$this->ion_auth->add_to_group($grp, $id);
-						}
-
-					}
-				}
-
-				// check to see if we are updating the user
-				if ($this->ion_auth->update($user->id, $data))
-				{
-					// redirect them back to the admin page if admin, or to the base url if non admin
-					$this->session->set_flashdata('message', $this->ion_auth->messages());
-					if ($this->ion_auth->is_admin())
-					{
-						redirect('auth', 'refresh');
-					}
-					else
-					{
-						redirect('/', 'refresh');
-					}
-
-				}
-				else
-				{
-					// redirect them back to the admin page if admin, or to the base url if non admin
-					$this->session->set_flashdata('message', $this->ion_auth->errors());
-					if ($this->ion_auth->is_admin())
-					{
-						redirect('auth', 'refresh');
-					}
-					else
-					{
-						redirect('/', 'refresh');
-					}
-
-				}
-
-			}
-		}
+       $this->data['email'] = array(
+            'name' => 'email',
+            'id' => 'email',
+            'type' => 'email',
+            'class' => 'form-control',
+            'value' => $existingCustomer->email,
+            'placeholder' => lang('customer_email_label'),
+            'required' => true
+        );
+       
+        $this->data['fullname'] = array(
+            'name' => 'fullname',
+            'id' => 'fullname',
+            'class' => 'form-control',
+            'value' => $existingCustomer->fullname,
+            'placeholder' => lang('customer_fullname_label'),
+            'type' => 'text',
+            'required' => true
+        );
+          
+        $this->data['submit'] = array('name' => 'submit',
+            'id' => 'submit',
+            'type' => 'submit',
+            'class' => 'btn btn-primary btn-flat pull-left submit-create-customer',
+        );
+                    
+        $this->_render_page('layout/master', $this->data);
     }
     
     public function customer_destroy($customer_id = null) {
@@ -220,7 +238,7 @@ class Customer extends CI_Controller
             $sub_array[] = $row->email;
             $sub_array[] = date("d F Y H:i", $row->created_on);
             $sub_array[] = '<div class="btn-group">
-                                <a href="customer/customer_edit/'. $row->id . '" class="btn btn-default btn-flat"><i class="fa fa-pencil"></i></a>
+                                <a href="' . base_url() . 'customer/customer_edit/'. $row->id . '" class="btn btn-default btn-flat"><i class="fa fa-pencil"></i></a>
                                 <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="'. base_url() . 'customer/customer_destroy/' . $row->id . '"><i class="fa fa-trash"></i></button>
                             </div>';
             $data[] = $sub_array;

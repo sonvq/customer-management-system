@@ -43,7 +43,7 @@
                     }
                 },
                 error: function () {
-                    toastr.error('Internal server error, please try again later');
+                    toastr.error('<?php echo lang('internal_server_error'); ?>');
                 }
             });
         });

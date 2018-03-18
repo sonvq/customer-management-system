@@ -11,6 +11,41 @@ class Customer_model extends CI_Model {
     var $select_column = array("id", "fullname", "email", "created_on");
     var $order_column = array("id", "fullname", "email", "created_on");
 
+    function find_existing_customer($id) {
+        $query = $this->db->where('id', $id)->get($this->table);
+        return $query->row();        
+    }
+    
+    function customer_create($email, $fullname) {
+        $data = [
+            'email' => $email,
+            'fullname' => $fullname,
+            'created_on' => time()
+        ];
+		// insert the new customer
+		$this->db->insert($this->table, $data);
+    }
+    
+    function customer_edit($id, $email, $fullname) {
+        $data = [
+            'email' => $email,
+            'fullname' => $fullname
+        ];
+		// insert the new customer
+		$this->db->update($this->table, $data, "id = $id");
+    }
+    
+    function count_existing_customer($email) {
+        $this->db->where('email', $email);
+        $this->db->from($this->table);
+        return $this->db->count_all_results();
+    }
+    function count_existing_customer_except($id, $email) {
+        $this->db->where('email', $email);
+        $this->db->where('id !=', $id);
+        $this->db->from($this->table);
+        return $this->db->count_all_results();
+    }
     function make_query() {
         $this->db->select($this->select_column);
         $this->db->from($this->table);
