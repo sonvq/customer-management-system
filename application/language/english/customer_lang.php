@@ -16,7 +16,7 @@
 $lang['customer_index_heading']                     = 'Customer list';
 $lang['customer_title']                             = 'Customer';
 $lang['customer_listing_subtitle']                  = 'Customer listing';
-$lang['customer_listing_description']               = 'Following is the list of customers in Clervermail system';
+$lang['customer_listing_description']               = 'Following is the list of customers in ClevverMail system';
 $lang['delete_customer_title']                      = 'Delete Customer';
 $lang['delete_customer_message']                    = 'Are you sure you want to delete this customer?';
 $lang['customer_delete_success']                    = 'Successfully deleted customer';
